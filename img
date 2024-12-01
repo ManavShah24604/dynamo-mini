@@ -1,0 +1,32 @@
+digraph GET_Operation {
+	graph [rankdir=TB]
+	Start [label=Start]
+	SendRequest [label="Send GET Request to Node"]
+	IsCoordinator [label="Is Node in Preference List?"]
+	Forward [label="Forward to Coordinator"]
+	IdentifyReplicas [label="Coordinator Identifies N Replicas"]
+	SendToReplicas [label="Send Requests to N Replicas"]
+	WaitForResponses [label="Wait for R Responses"]
+	ResponsesReceived [label="R Responses Received?"]
+	RetryOrFail [label="Retry or Fail"]
+	ReceiveVersions [label="Receive Versions from Replicas"]
+	ConflictsDetected [label="Conflicts Detected?"]
+	Reconcile [label="Reconcile Conflicting Versions"]
+	ReturnData [label="Return Data to Client"]
+	ReadRepair [label="Perform Read Repair if Stale Versions Found"]
+	Start -> SendRequest
+	SendRequest -> IsCoordinator
+	IsCoordinator -> Forward
+	IsCoordinator -> IdentifyReplicas
+	Forward -> IdentifyReplicas
+	IdentifyReplicas -> SendToReplicas
+	SendToReplicas -> WaitForResponses
+	WaitForResponses -> ResponsesReceived
+	ResponsesReceived -> RetryOrFail
+	ResponsesReceived -> ReceiveVersions
+	ReceiveVersions -> ConflictsDetected
+	ConflictsDetected -> Reconcile
+	ConflictsDetected -> ReturnData
+	Reconcile -> ReturnData
+	ReturnData -> ReadRepair
+}
